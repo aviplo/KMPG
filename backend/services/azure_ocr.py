@@ -12,17 +12,17 @@ from services.validation import parse_and_validate_response
 client = DocumentAnalysisClient(endpoint=ocr_endpoint, credential=AzureKeyCredential(ocr_key))
 
 
-def extract_text_from_pdf(file_obj):
+async def extract_text_from_pdf(file_obj):
     print("Extracting text from PDF using Azure OCR")
-    poller = client.begin_analyze_document("prebuilt-layout", document=file_obj)
-    result = poller.result() 
+    poller = await client.begin_analyze_document("prebuilt-layout", document=file_obj)
+    result = await poller.result()
     return result.pages
-    
-def get_json_structured_ocr(ocr_input):
+
+async def get_json_structured_ocr(ocr_input):
     language = detect_primary_language(ocr_input[0].lines)
     schema_to_use = hebrew_schema if language.value == Language.HEBREW.value else english_schema
     print("Detected primary language:", language.value)
     user_input = user_prompt(schema_to_use, ocr_input)
     messages = prepare_messages(user_input, system_prompt)
-    response = chat(messages)
+    response =await chat(messages)
     return parse_and_validate_response(response, schema_to_use)

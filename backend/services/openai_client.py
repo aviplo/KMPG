@@ -7,9 +7,9 @@ client = AzureOpenAI(
     api_version=chat_api_version,
 )
 
-def chat(messages):
+async def chat(messages):
     print("Sending messages to OpenAI API")
-    response = client.chat.completions.create(
+    response = await client.chat.completions.create(
         model=chat_deployment,
         messages=messages,
     )

@@ -1,26 +1,12 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
-
-from services.azure_ocr import extract_text_from_pdf, get_json_structured_ocr
+from fastapi import FastAPI
+from routers.ocr import extract_files_to_json
+from routers.qa import qa_endpoint
+from routers.embeddings import embed_endpoint
 
 app= FastAPI()
 
-@app.post("/upload_files")
-async def extract_files_to_json(files: list[UploadFile] = File(...)):
-    try:
-        results = []
-        for file in files:
-            contents = await file.read()
-            result = extract_text_from_pdf(contents)
-            results.append(get_json_structured_ocr(result))
-        return results
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-# res = embed("Your text string goes here")
-# print(res)
-
+app.route("/upload_files", methods=["POST"])(extract_files_to_json)
+app.route("/qa", methods=["POST"])(qa_endpoint)
+app.route("/embed", methods=["POST"])(embed_endpoint)
     
     
