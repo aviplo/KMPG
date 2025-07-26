@@ -1,7 +1,7 @@
-from openai import AzureOpenAI
+from openai import AsyncAzureOpenAI
 from services import chat_endpoint, chat_key, chat_deployment, chat_api_version
 
-client = AzureOpenAI(
+client = AsyncAzureOpenAI(
     azure_endpoint=chat_endpoint,
     api_key=chat_key,
     api_version=chat_api_version,

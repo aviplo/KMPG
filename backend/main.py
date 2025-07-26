@@ -1,12 +1,10 @@
 from fastapi import FastAPI
-from routers.ocr import extract_files_to_json
-from routers.qa import qa_endpoint
-from routers.embeddings import embed_endpoint
+from routes.ocr import router as ocr_router
+from routes.qa import router as qa_router
+from routes.embeddings import router as embed_router
 
-app= FastAPI()
+app = FastAPI()
 
-app.route("/upload_files", methods=["POST"])(extract_files_to_json)
-app.route("/qa", methods=["POST"])(qa_endpoint)
-app.route("/embed", methods=["POST"])(embed_endpoint)
-    
-    
+app.include_router(ocr_router, prefix="/upload_files")
+app.include_router(qa_router, prefix="/qa")
+app.include_router(embed_router, prefix="/embed")
