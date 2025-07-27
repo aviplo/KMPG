@@ -1,20 +1,23 @@
 import os
 import json
+from utils.logging import setup_logging
+logger = setup_logging()
 
-with open("config.json") as f:
+with open("config.json", encoding="utf-8") as f:
     config = json.load(f)
 
 html_folder = config.get("html_folder", "./resources/phase2_data")
-if not os.path.exists(html_folder):
-    raise ValueError(f"HTML folder '{html_folder}' does not exist. Please check your configuration.")
+if not os.path.isdir(html_folder):
+    raise ValueError(f"HTML folder '{html_folder}' does not exist or is not a directory.")
+
+html_files = [f for f in os.listdir(html_folder) if f.endswith(".html")]
+if not html_files:
+    raise ValueError(f"No HTML files found in '{html_folder}'.")
+
 MHO_DATA = ""
-for file_name in os.listdir(html_folder):
-    print(f"Loading HTML file: {file_name}")
-    if not file_name.endswith(".html"):
-        raise ValueError(f"File '{file_name}' in HTML folder is not an HTML file. Please check your configuration.")
+for file_name in html_files:
     full_path = os.path.join(html_folder, file_name)
-    if not os.path.isfile(full_path):
-        raise ValueError(f"File '{full_path}' is not a valid file. Please check your configuration.")
+    logger.info(f"Loading HTML data from: {full_path}")
     with open(full_path, encoding="utf-8") as f:
         MHO_DATA += f.read()
 
