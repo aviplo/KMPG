@@ -6,19 +6,6 @@ from prompts.qa import user_prompt_qa
 from helpers.validation import validate_user_info
 
 def chatbot_fn(message, history, user_info=None, phase="info_collection"):
-    """
-    Stateless chatbot function that handles both info collection and QA phases.
-    All state is passed as parameters to maintain statelessness.
-    
-    Args:
-        message: Current user message
-        history: List of conversation history messages
-        user_info: Dictionary containing user information
-        phase: Current phase ("info_collection" or "qa")
-    
-    Returns:
-        tuple: (updated_history, updated_user_info, updated_phase)
-    """
     if not message:
         return history or [], user_info or {}, phase
     
@@ -54,7 +41,6 @@ def chatbot_fn(message, history, user_info=None, phase="info_collection"):
             if "user_info" in response_data:
                 extracted_data = response_data["user_info"]
                 user_info.update(extracted_data)
-                print(f"Updated user_info with extracted data: {user_info}")
             
             status = response_data.get("status", "")
             if status == "complete":

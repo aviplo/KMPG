@@ -3,9 +3,6 @@ from services.file_upload import extract_fields
 from services.chatbot import chatbot_fn
 
 def handle_chat_message(message, history, user_info, phase):
-    """
-    Handle chat message and manage state in the frontend
-    """
     updated_history, updated_user_info, updated_phase = chatbot_fn(
         message, history, user_info, phase
     )
