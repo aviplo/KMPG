@@ -27,3 +27,15 @@ def check_validation(schema, data):
         }
         print("JSON validation failed:", error_details)
         raise ValueError(f"JSON validation failed: {error_details}")
+    
+    
+    # {
+    #     "first_name": lambda v: isinstance(v, str) and v.strip() != "",
+    #     "last_name": lambda v: isinstance(v, str) and v.strip() != "",
+    #     "id_number": lambda v: re.fullmatch(r"\d{9}", str(v)) is not None,
+    #     "gender": lambda v: v in ["זכר", "נקבה", "male", "female"],
+    #     "age": lambda v: isinstance(v, int) and 0 <= v <= 120,
+    #     "hmo": lambda v: v in ["מכבי", "מאוחדת", "כללית", "Maccabi", "Meuhedet", "Clalit"],
+    #     "hmo_card_number": lambda v: re.fullmatch(r"\d{9}", str(v)) is not None,
+    #     "membership_tier": lambda v: v in ["זהב", "כסף", "ארד", "Gold", "Silver", "Bronze"]
+    # }

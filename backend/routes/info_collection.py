@@ -3,46 +3,44 @@ from classes.chat_request import ChatRequest
 from services.openai_client import chat, prepare_messages
 from prompts.user_info import system_prompt_info_collection
 import json
+from utils.logging import setup_logging
+
+logger = setup_logging()
 
 router = APIRouter()
 
+async def safe_json_with_retries(messages, max_retries=5):
+    for attempt in range(max_retries):
+        try:
+            messages.append({"role": "system", "content": "MAKE SURE To RESPOND IN JSON FORMAT"})
+            response_content = await chat(messages)
+            return json.loads(response_content)
+        except json.JSONDecodeError as e:
+            logger.error(f"[Attempt {attempt + 1}] Failed to parse: {e} of response: {response_content}")
+            if attempt == max_retries - 1:
+                raise ValueError("Failed to parse JSON after retries.")
+
+
 @router.post("/collect_info")
-async def user_info_endpoint(request: ChatRequest) -> dict:
-    max_retries = 5
-    
+async def user_info_endpoint(request: ChatRequest) -> dict:   
     try:
+        logger.info(json.dumps({"Received user collection message:": request.message}, ensure_ascii=False))
         messages = prepare_messages(request.message, system_prompt_info_collection)
-        print(f"Received user info request: {json.dumps(request.dict(), ensure_ascii=False, indent=2)}")
-        for msg in request.history:
-            messages.append(msg)
         
+        messages.extend(request.history)
         messages.append({"role": "user", "content": request.message})
-        for attempt in range(max_retries):
-            try:
-                response_content = await chat(messages)
-                print(f"Response from OpenAI (attempt {attempt + 1}): {response_content}")
-                result = json.loads(response_content)
-                print(f"Successfully parsed JSON on attempt {attempt + 1}")
-                return result
-                
-            except json.JSONDecodeError as e:
-                print(f"JSON parsing failed on attempt {attempt + 1}: {e}")
-                print(f"Raw response: {response_content}")
-                
-                if attempt < max_retries - 1:
-                    print(f"Retrying... (attempt {attempt + 2}/{max_retries})")
-                    continue
-                else:
-                    print("Failed to parse JSON, returning fallback response")
-                    return {
-                        "answer": "I apologize, but I'm having trouble processing your request right now. Please try again or rephrase your question.",
-                        "user_info": request.user_info if hasattr(request, 'user_info') else {},
-                        "status": "error"
-                    }
-        
+        try:
+            result = await safe_json_with_retries(messages)
+            return result
+        except ValueError:
+            return {
+                "answer": "Please try again or rephrase your question.",
+                "user_info": request.user_info or {},
+                "status": "error"
+                }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
