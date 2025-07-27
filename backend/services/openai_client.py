@@ -17,6 +17,7 @@ async def chat(messages):
             model=chat_deployment,
             messages=messages,
         )
+        logger.info(f"Received response from OpenAI")
         return response.choices[0].message.content
     except Exception as e:
         logger.error(f"Error in chat(): {e}")

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from classes.chat_request import ChatRequest
-from services.openai_client import chat, prepare_messages
+from services.openai_client import prepare_messages
 from prompts.user_info import system_prompt_info_collection
 import json
 from utils.logging import setup_logging

@@ -1,5 +1,6 @@
 import json
 from utils.logging import setup_logging
+from services.openai_client import chat
 
 logger = setup_logging()
 
