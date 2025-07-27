@@ -2,4 +2,4 @@
 **/__pycache__/
 **/venv/
 **/frontend/.gradio/
-**/backend/logs/
+**/backend/logs/**

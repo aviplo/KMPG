@@ -16,10 +16,14 @@ async def safe_json_with_retries(messages, max_retries=5):
             response_content = await chat(messages)
             return json.loads(response_content)
         except json.JSONDecodeError as e:
-            logger.error(f"[Attempt {attempt + 1}] Failed to parse: {e} of response: {response_content}")
+            logger.error(f"[Attempt {attempt + 1}] Failed to parse JSON: {e}")
+            logger.debug(f"Response content: {response_content}")
             if attempt == max_retries - 1:
                 raise ValueError("Failed to parse JSON after retries.")
-
+        except Exception as e:
+            logger.error(f"[Attempt {attempt + 1}] Unexpected error from chat(): {e}")
+            if attempt == max_retries - 1:
+                raise
 
 @router.post("/collect_info")
 async def user_info_endpoint(request: ChatRequest) -> dict:   
