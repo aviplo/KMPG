@@ -8,12 +8,16 @@ client = AsyncAzureOpenAI(
 )
 
 async def chat(messages):
-    print("Sending messages to OpenAI API")
-    response = await client.chat.completions.create(
-        model=chat_deployment,
-        messages=messages,
-    )
-    return response.choices[0].message.content
+    try:
+        print("Sending messages to OpenAI API")
+        response = await client.chat.completions.create(
+            model=chat_deployment,
+            messages=messages,
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error in OpenAI API call: {e}")
+        raise e
 
 def prepare_messages(user_input, system_prompt):
     return [

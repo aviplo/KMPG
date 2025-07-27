@@ -1,22 +1,22 @@
-from fastapi import APIRouter, HTTPException
-from classes.chat_request import ChatRequest
-from services.openai_client import chat, prepare_messages
-from prompts.user_info import system_prompt_info_collection
+from services.openai_client import prepare_messages, chat
 import json
+from fastapi import APIRouter, HTTPException
+from prompts.qa import system_prompt_qa
+from classes.chat_request import ChatRequest
 
 router = APIRouter()
 
-@router.post("/collect_info")
-async def user_info_endpoint(request: ChatRequest) -> dict:
+@router.post("/qa")
+async def qa_endpoint(request: ChatRequest) -> dict:
     max_retries = 5
-    
     try:
-        messages = prepare_messages(request.message, system_prompt_info_collection)
-        print(f"Received user info request: {json.dumps(request.dict(), ensure_ascii=False, indent=2)}")
+        print(f"Received question: {json.dumps(request.dict(), ensure_ascii=False, indent=2)}")
+        messages = prepare_messages(request.message, system_prompt_qa)
         for msg in request.history:
             messages.append(msg)
         
         messages.append({"role": "user", "content": request.message})
+        
         for attempt in range(max_retries):
             try:
                 response_content = await chat(messages)
@@ -39,10 +39,7 @@ async def user_info_endpoint(request: ChatRequest) -> dict:
                         "user_info": request.user_info if hasattr(request, 'user_info') else {},
                         "status": "error"
                     }
-        
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        print(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    

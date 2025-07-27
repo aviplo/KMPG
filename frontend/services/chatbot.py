@@ -2,7 +2,7 @@
 import requests
 from services.config import BACKEND_URL
 from prompts.info_collet import build_info_collection_prompt
-from prompts.qa import system_prompt_qa
+from prompts.qa import user_prompt_qa
 from helpers.validation import validate_user_info
 
 def chatbot_fn(message, history, user_info=None, phase="info_collection"):
@@ -32,7 +32,7 @@ def chatbot_fn(message, history, user_info=None, phase="info_collection"):
         prompt = build_info_collection_prompt(user_info)
     else:
         endpoint = f"{BACKEND_URL}/qa"
-        prompt = system_prompt_qa
+        prompt = user_prompt_qa(user_info)
 
     payload = {
         "prompt": prompt,
