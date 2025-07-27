@@ -1,34 +1,15 @@
 import gradio as gr
-import requests
-import io
-import json
+from services.file_upload import extract_fields
+from services.chatbot import chatbot_fn
 
-def extract_fields(files):
-    if files is None:
-        return {}
-
-    if isinstance(files, str):
-        files = [files]
-
-    upload_files = []
-    file_handles = []
-    for f in files:
-        fh = open(f, "rb")
-        file_handles.append(fh)
-        upload_files.append(("files", (f, fh, "application/pdf")))
-
-    try:
-        response = requests.post("http://localhost:8000/upload_files", files=upload_files)
-        return response.json()
-    except Exception as e:
-        return {"error": str(e)}
-    finally:
-        for fh in file_handles:
-            fh.close()
-
-def chatbot_fn(message, history):
-    # TODO: Call backend API for chatbot response
-    return "Chatbot response will appear here.", history + [[message, "Chatbot response will appear here."]]
+def handle_chat_message(message, history, user_info, phase):
+    """
+    Handle chat message and manage state in the frontend
+    """
+    updated_history, updated_user_info, updated_phase = chatbot_fn(
+        message, history, user_info, phase
+    )
+    return updated_history, "", updated_user_info, updated_phase
 
 with gr.Blocks() as layout:
     gr.Markdown("# GenAI Field Extraction")
@@ -36,9 +17,31 @@ with gr.Blocks() as layout:
         file_input = gr.File(label="Upload PDF", file_types=[".pdf"], file_count="multiple")
         json_output = gr.JSON(label="Extracted Fields")
         file_input.change(extract_fields, inputs=file_input, outputs=json_output)
+    
     with gr.Tab("Phase 2: Medical Chatbot"):
-        chatbot = gr.Chatbot(type="messages")
-        msg = gr.Textbox(label="Prompt")
-        msg.submit(chatbot_fn, inputs=[msg, chatbot], outputs=[chatbot, chatbot])
+        user_info_state = gr.State({})
+        phase_state = gr.State("info_collection")
+        
+        gr.Markdown("## Medical Services Chatbot")
+        gr.Markdown("I'll help you with information about medical services. First, I need to collect some information about you.")
+        
+        chatbot = gr.Chatbot(type="messages", label="Chat")
+        msg = gr.Textbox(label="Type your message here...", placeholder="Hello, I need information about medical services")
+        
+        clear_btn = gr.Button("Start New Conversation")
+        
+        msg.submit(
+            handle_chat_message, 
+            inputs=[msg, chatbot, user_info_state, phase_state], 
+            outputs=[chatbot, msg, user_info_state, phase_state]
+        )
+        
+        def clear_conversation():
+            return [], {}, "info_collection"
+        
+        clear_btn.click(
+            clear_conversation,
+            outputs=[chatbot, user_info_state, phase_state]
+        )
 
 layout.launch()
