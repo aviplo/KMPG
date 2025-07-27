@@ -7,67 +7,6 @@ This project is a medical services chatbot that combines OCR field extraction fr
 1. **Phase 1**: OCR and field extraction from medical documents
 2. **Phase 2**: Conversational chatbot for medical services information
 
-## Project Structure
-
-```
-projects/
-│
-├── backend/
-│   ├── main.py                  # FastAPI app entry point
-│   ├── config.json              # Configuration file
-│   ├── requirements.txt         # Backend dependencies
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── ocr.py              # OCR & field extraction endpoints
-│   │   ├── info_collection.py  # User info collection endpoints
-│   │   ├── qa.py               # Q&A chatbot endpoints
-│   │   ├── embeddings.py       # Vector embeddings endpoints
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── azure_ocr.py        # Azure Document Intelligence integration
-│   │   ├── openai_client.py    # Azure OpenAI integration
-│   │   ├── embeddings.py       # Vector embeddings service
-│   │   ├── validation.py       # Data validation utilities
-│   ├── prompts/
-│   │   ├── insurance.py        # Insurance-related prompts
-│   │   ├── qa.py               # Q&A prompts
-│   │   ├── schemas.py          # Data schemas
-│   │   ├── user_info.py        # User info collection prompts
-│   ├── classes/
-│   │   ├── chat_request.py     # Chat request data models
-│   │   ├── languages.py        # Language detection utilities
-│   ├── helpers/
-│   │   ├── __init__.py
-│   │   ├── detect_language.py  # Language detection helper
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── logging.py          # Logging setup/utilities
-│   │   ├── error_handling.py   # Error handling utilities
-│   ├── resources/
-│   │   ├── phase1_data/        # PDF documents for OCR
-│   │   ├── phase2_data/        # HTML knowledge base files
-│   ├── logs/
-│   │   ├── app.log             # Application logs
-│
-├── frontend/
-│   ├── app.py                  # Gradio UI entry point
-│   ├── config.json             # Frontend configuration
-│   ├── requirements.txt        # Frontend dependencies
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── chatbot.py          # Chatbot service logic
-│   │   ├── config.py           # Configuration management
-│   │   ├── file_upload.py      # File upload handling
-│   ├── prompts/
-│   │   ├── info_collet.py      # Info collection prompts
-│   │   ├── qa.py               # Q&A prompts
-│   ├── helpers/
-│   │   ├── __init__.py
-│   │   ├── validation.py       # Validation helpers
-│
-├── README.md                   # This file
-```
-
 ## Setup Instructions
 
 ### Prerequisites
