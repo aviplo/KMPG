@@ -16,7 +16,6 @@ client = DocumentAnalysisClient(endpoint=ocr_endpoint, credential=AzureKeyCreden
 
 
 def extract_text_from_pdf(file_obj):
-    logger.info("Extracting text from PDF using Azure OCR")
     poller = client.begin_analyze_document(ocr_model, document=file_obj)
     result = poller.result()
     return result.pages

@@ -1,5 +1,8 @@
 from jsonschema import validate, ValidationError
 import json
+from utils.logging import setup_logging
+
+logger = setup_logging()
 
 def parse_and_validate_response(response, schema):
     try:
@@ -15,7 +18,7 @@ def parse_and_validate_response(response, schema):
 def check_validation(schema, data):
     try:
         validate(instance=data, schema=schema)
-        print("JSON validation passed")
+        logger.info("JSON validation passed")
         return True
     except ValidationError as e:
         error_details = {
@@ -25,7 +28,7 @@ def check_validation(schema, data):
             "expected": e.validator_value,
             "invalid_value": e.instance,
         }
-        print("JSON validation failed:", error_details)
+        logger.error("JSON validation failed:", error_details)
         raise ValueError(f"JSON validation failed: {error_details}")
     
     
