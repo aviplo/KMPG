@@ -23,7 +23,7 @@ def extract_text_from_pdf(file_obj):
 async def get_json_structured_ocr(ocr_input):
     language = detect_primary_language(ocr_input[0].lines)
     schema_to_use = hebrew_schema if language.value == Language.HEBREW.value else english_schema
-    logger.info("Detected primary language:", language.value)
+    logger.info(f"Detected primary language: {language.value}")
     user_input = user_prompt(schema_to_use, ocr_input)
     messages = prepare_messages(user_input, system_prompt)
     response = await chat(messages)
