@@ -12,7 +12,7 @@ client = AsyncAzureOpenAI(
 
 async def chat(messages):
     try:
-        logger.info(f"Sending messages to OpenAI: {messages}")
+        logger.info(f"Sending messages to OpenAI")
         response = await client.chat.completions.create(
             model=chat_deployment,
             messages=messages,
