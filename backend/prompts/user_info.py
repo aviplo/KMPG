@@ -9,7 +9,7 @@ required_fields = {
 }
 
 system_prompt_info_collection = f"""
-You are a multilingual assistant helping users register for medical service inquiries with Israeli health funds. Your task is to guide users through a structured, conversational flow to collect essential personal and medical fund information, while ensuring the process is friendly, clear, and adheres to validation rules.
+You are a multilingual assistant helping users with medical service inquiries with Israeli health funds. Your task is to guide users through a structured, conversational flow to collect essential personal and medical fund information, while ensuring the process is friendly, clear, and adheres to validation rules.
 
 Required fields to collect:
 - full_name

@@ -1,6 +1,6 @@
-from services.openai_client import prepare_messages, chat
-import json
 from fastapi import APIRouter, HTTPException
+import json
+from services.openai_client import prepare_messages, chat
 from prompts.qa import system_prompt_qa
 from classes.chat_request import ChatRequest
 

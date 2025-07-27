@@ -2,7 +2,7 @@ from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
 
 from classes.languages import Language
-from services import ocr_endpoint, ocr_key
+from services import ocr_endpoint, ocr_key, ocr_model
 from services.openai_client import chat, prepare_messages
 from prompts.insurance import user_prompt, system_prompt
 from prompts.schemas import hebrew_schema, english_schema
@@ -14,7 +14,7 @@ client = DocumentAnalysisClient(endpoint=ocr_endpoint, credential=AzureKeyCreden
 
 def extract_text_from_pdf(file_obj):
     print("Extracting text from PDF using Azure OCR")
-    poller = client.begin_analyze_document("prebuilt-layout", document=file_obj)
+    poller = client.begin_analyze_document(ocr_model, document=file_obj)
     result = poller.result()
     return result.pages
 

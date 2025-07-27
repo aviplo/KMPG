@@ -15,3 +15,4 @@ embeddings_api_version = os.getenv("AZURE_EMBEDDINGS_API_VERSION", "2023-05-15")
 chat_deployment = os.getenv("AZURE_CHAT_DEPLOYMENT", "gpt-4o")
 chat_api_version = os.getenv("AZURE_CHAT_API_VERSION", "2025-01-01-preview")
 embeddings_model = os.getenv("AZURE_EMBEDDINGS_MODEL", "text-embedding-ada-002")
+ocr_model = os.getenv("AZURE_OCR_MODEL", "prebuilt-layout") #prebuilt-document

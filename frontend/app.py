@@ -18,7 +18,7 @@ with gr.Blocks() as layout:
         json_output = gr.JSON(label="Extracted Fields")
         file_input.change(extract_fields, inputs=file_input, outputs=json_output)
     
-    with gr.Tab("Phase 2: Medical Chatbot"):
+    with gr.Tab("Medical Chatbot"):
         user_info_state = gr.State({})
         phase_state = gr.State("info_collection")
         
